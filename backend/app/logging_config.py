@@ -26,7 +26,7 @@ import json
 import logging
 import logging.config
 import os
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 
 from .config import settings
 
