@@ -212,3 +212,23 @@ def test_max_file_size_allowed():
     )
 
     assert response.status_code == 200
+
+
+import pytest
+from app.utils.file_validator import validate_file_extension, validate_mime_type, validate_file
+
+def test_null_byte_in_filename_raises_error():
+    with pytest.raises(ValueError):
+        validate_file_extension("malicious\x00.png")
+
+def test_empty_filename_raises_error():
+    with pytest.raises(ValueError):
+        validate_file_extension("   ")
+
+def test_missing_mime_entry_returns_value_error():
+    with pytest.raises(ValueError):
+        validate_mime_type(".unsupported_ext", b"some binary data")
+
+def test_empty_file_content_raises_error():
+    with pytest.raises(ValueError):
+        validate_file("valid_image.png", b"")
