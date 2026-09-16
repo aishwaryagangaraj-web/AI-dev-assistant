@@ -16,7 +16,7 @@ router = APIRouter(tags=["Upload Files"])
 @router.get("/")
 def index_upload():
     return {
-        "max_file_size_MB": f"{ max_file_size / (1024 * 1024):.2f} MB",
+        "max_file_size_MB": f"{max_file_size / (1024 * 1024):.2f} MB",
         "blocked_extensions": BLOCKED_EXTENSIONS,
         "allowed_extensions": ALLOWED_EXTENSIONS,
         "allowed_mime_types": ALLOWED_MIME_TYPES,
@@ -39,7 +39,7 @@ async def upload_file(file: UploadFile):
     # Validate max size
     if filesize > max_file_size:
         raise HTTPException(
-            status_code=status.HTTP_413_CONTENT_TOO_LARGE,
+            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
             detail=f"File size should not exceed {max_file_size / (1024 * 1024)} MB",
         )
 
@@ -51,7 +51,6 @@ async def upload_file(file: UploadFile):
             "filename": filename,
             "content_type": detected_mime,
             "size": f"{filesize/1024:.2f} KB",
-            # "content": filecontent.decode('utf-8', errors='ignore')
         }
 
     except ValueError as e:
